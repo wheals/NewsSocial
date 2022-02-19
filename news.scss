@@ -1,0 +1,64 @@
+.sbahj .logo::before {
+    content: "NEWNS";
+    font-size: 24px;
+}
+
+.news {
+    background: var(--page-news);
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    p {
+        text-align: justify !important;
+        align-self: center;
+        width: 420px !important; // dude weed lmao
+    }
+    display: flex;
+    flex-flow: column;
+    flex: 1 0 auto;
+    img {
+        align-self: center;
+        max-width: 100%;
+        object-fit: contain;
+    }
+    //padding-left: 25px;
+    //padding-right: 30px;
+    //padding-top: 20px;
+    //padding-bottom: 20px;
+    //margin: 10px;
+
+    .date.link {
+        font-style: italic;
+        ::before {
+            content: "Posted on ";
+        }
+        margin-top: 30px;
+        padding-bottom: 3px;
+        border-bottom: 1px solid rgb(211, 211, 211);
+        margin-bottom: 7px;
+    }
+}
+
+a {
+    color: var(--page-links);
+}
+
+#newslogo {
+    content: url(assets://images/news.png);
+}
+
+.scratch #newslogo, .sbahj #newslogo  {
+    content: url();
+}
+
+.A6A6 #newslogo  {
+    content: url(assets://images/a6a6_news.png);
+}
+
+.retro #newslogo  {
+    content: url(assets://images/retro_news.gif);
+}
+
+.pxs #newslogo  {
+    content: url(assets://images/pxs_news.png);
+}
