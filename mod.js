@@ -120,52 +120,55 @@ module.exports = {
     let news = {}
     for (let pageNum in STORY) {
       const page = STORY[pageNum]
-      let yesterday = page.timestamp * 1 - 60 * 60 * 24
-      let prevNewsposts = []
-      for (let year in NEWS)
+      const flags = ["ENDOFHS", "GAMEOVER", "DOTA", "SHES8ACK", "FULLSCREEN", "ECHIDNA"]
+      if (!flags.some(flag => page.flag.includes(flag))) {
+        let yesterday = page.timestamp * 1 - 60 * 60 * 24
+        let prevNewsposts = []
+        for (let year in NEWS)
           for (let post of NEWS[year])
-              if (yesterday > post.timestamp)
-                  prevNewsposts.push(post)
-      prevNewsposts.sort((a, b) => b.timestamp - a.timestamp)
-      prevNewsposts = prevNewsposts.slice(0, 4)
-      prevNewsposts = prevNewsposts.map(newspost => newspost.html)
-      let newsHTML = prevNewsposts.reduce((prev, cur) => prev + cur, "")
-      newsHTML = newsHTML.replace(/src="\/archive/g, 'src="assets://archive')
-      newsHTML = newsHTML.replace(/src='\/archive/g, "src='assets://archive")
-      newsHTML = '<img id="newslogo"> </img>' + newsHTML
+            if (yesterday > post.timestamp)
+              prevNewsposts.push(post)
+        prevNewsposts.sort((a, b) => b.timestamp - a.timestamp)
+        prevNewsposts = prevNewsposts.slice(0, 4)
+        prevNewsposts = prevNewsposts.map(newspost => newspost.html)
+        let newsHTML = prevNewsposts.reduce((prev, cur) => prev + cur, "")
+        newsHTML = newsHTML.replace(/src="\/archive/g, 'src="assets://archive')
+        newsHTML = newsHTML.replace(/src='\/archive/g, "src='assets://archive")
+        newsHTML = '<img id="newslogo"> </img>' + newsHTML
 
-      let latestpost = null;
-      for (let post of SOCIAL.tumblr)
-        if (post.timestamp < yesterday && !(latestpost && latestpost.timestamp > post.timestamp))
-          latestpost = post
-      let tumblrtext = ""
-      if (latestpost)
-        tumblrtext = `<div>Latest Tumblr post: <a href="tumblr/${latestpost.id}">${new Date(latestpost.timestamp * 1000).toDateString()}</a></div>`
-
-      latestpost = null
-      for (let account in SOCIAL.formspring)
-        for (let post of SOCIAL.formspring[account])
+        let latestpost = null;
+        for (let post of SOCIAL.tumblr)
           if (post.timestamp < yesterday && !(latestpost && latestpost.timestamp > post.timestamp))
             latestpost = post
-      let formspringtext = ""
-      if (latestpost)
-        formspringtext = `<div>Latest Formspring post: <a href="formspring/${latestpost.id}">${new Date(latestpost.timestamp * 1000).toDateString()}</a></div>`
+        let tumblrtext = ""
+        if (latestpost)
+          tumblrtext = `<div>Latest Tumblr post: <a href="tumblr/${latestpost.id}">${new Date(latestpost.timestamp * 1000).toDateString()}</a></div>`
 
-      let blogtext = "";
-      for (let blog of blogspot_data)
-        if (blog.timestamp < yesterday)
-        {
-          blogtext = `<div>Latest Blogspot post: <a href="/blogspot/${blog.id}">${blog.title}</a></div>`
-          break;
-        }
+        latestpost = null
+        for (let account in SOCIAL.formspring)
+          for (let post of SOCIAL.formspring[account])
+            if (post.timestamp < yesterday && !(latestpost && latestpost.timestamp > post.timestamp))
+              latestpost = post
+        let formspringtext = ""
+        if (latestpost)
+          formspringtext = `<div>Latest Formspring post: <a href="formspring/${latestpost.id}">${new Date(latestpost.timestamp * 1000).toDateString()}</a></div>`
 
-      news[pageNum] = [
-        { "content": tumblrtext
-                     + formspringtext
-                     + blogtext },
-        { "content": newsHTML,
-          "class": "news", },
-      ]
+        let blogtext = "";
+        for (let blog of blogspot_data)
+          if (blog.timestamp < yesterday)
+          {
+            blogtext = `<div>Latest Blogspot post: <a href="/blogspot/${blog.id}">${blog.title}</a></div>`
+            break;
+          }
+
+        news[pageNum] = [
+          { "content": tumblrtext
+                       + formspringtext
+                       + blogtext },
+          { "content": newsHTML,
+            "class": "news", },
+        ]
+      }
     }
     notes.push({
       "author": "",
