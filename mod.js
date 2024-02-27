@@ -96,8 +96,6 @@ let blogspot_data = [
   }
 ];
 
-let notes = []
-
 module.exports = {
   title: "Social Links",
   summary: "Adds newsposts and links to Andrew Hussie's public social media posts about Problem Sleuth and Homestuck.",
@@ -161,22 +159,18 @@ module.exports = {
             break;
           }
 
-        news[pageNum] = [
+        let existing_footnotes = archive.footnotes.story[pageNum] ?? [];
+        archive.footnotes.story[pageNum] = [
           { "content": tumblrtext
                        + formspringtext
                        + blogtext },
           { "content": newsHTML,
             "class": "news", },
-        ]
+          ...existing_footnotes
+        ];
       }
     }
-    notes.push({
-      "author": "",
-      "story": news,
-    })
   },
-
-  footnotes: notes,
 
   routes: {
     'assets://images/retro_news.gif': './retro_news.gif',
