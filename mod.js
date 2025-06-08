@@ -110,6 +110,22 @@ module.exports = {
     }
   ],
 
+  settings: {
+    boolean: [
+      { model: "appendSocials",
+	label: "Place newsposts after other footnotes",
+	desc: "Check to place newsposts after other footnotes.  This is dependent on mod load order – Social Links must appear above other other mods in the active mod list for Social Links to know about them." }
+      ]
+  },
+
+  computed(api) {
+    store = api.store
+
+    // Default appendSocials to off
+    store.set("appendSocials", store.get("appendSocials", false))
+    appendSocials = store.get("appendSocials")
+  },
+
   edit(archive) {
     const SOCIAL = archive.social
     const NEWS = archive.news
@@ -161,12 +177,13 @@ module.exports = {
 
         let existing_footnotes = archive.footnotes.story[pageNum] ?? [];
         archive.footnotes.story[pageNum] = [
+	  ...(appendSocials ? existing_footnotes : []),
           { "content": tumblrtext
                        + formspringtext
                        + blogtext },
           { "content": newsHTML,
             "class": "news", },
-          ...existing_footnotes
+	  ...(appendSocials ? [] : existing_footnotes)
         ];
       }
     }
